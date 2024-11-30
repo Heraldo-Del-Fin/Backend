@@ -10,12 +10,12 @@ const db = mysql.createPool({
 
 // Verificar la conexión
 db.getConnection((err, connection) => {
-    if (err) {
-      console.error('Error al conectar con la base de datos:', err.message);
-    } else {
-      console.log('Conexión exitosa a la base de datos');
-      connection.release(); // Liberar la conexión para que otros procesos puedan usarla
-    }
-  });
-  
+  if (err) {
+    console.error('Error al conectar con la base de datos:', err.message);
+    process.exit(1); // Salir del proceso si no hay conexión
+  }
+  console.log('Conexión exitosa a la base de datos');
+  connection.release();
+});
+
   module.exports = db;

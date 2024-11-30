@@ -18,7 +18,13 @@ app.use('/api/viajes', viajesRoutes);
 app.use('/api/conductores', conductorRoutes);
 app.use('/api/vehiculos', vehiculoRoutes);
 app.use('/api/mantenimientos', mantenimientoRoutes);
+
 app.use('/api/consumos', consumoRoutes);
+// Middleware para manejar errores
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Imprimir el error en el servidor
+  res.status(err.status || 500).json({ message: err.message || 'Error interno del servidor' });
+});
 
 
 app.get('/test-db', (req, res) => {
