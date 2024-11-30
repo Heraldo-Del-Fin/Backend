@@ -2,8 +2,21 @@ const db = require('../config/db');
 
 // Obtener todos los conductores
 const getConductores = (req, res) => {
-  const sql = 'SELECT * FROM Conductor';
-  db.query(sql, (err, results) => {
+  const { nombre_apellido, licencia } = req.query; // Obtener parámetros de consulta
+  let sql = 'SELECT * FROM Conductor';
+  const params = [];
+
+  // Agregar filtros dinámicos según los parámetros enviados
+  if (nombre_apellido) {
+    sql += ' WHERE nombre_apellido LIKE ?';
+    params.push(`%${nombre_apellido}%`);
+  }
+  if (licencia) {
+    sql += nombre_apellido ? ' AND licencia = ?' : ' WHERE licencia = ?';
+    params.push(licencia);
+  }
+
+  db.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error al obtener conductores:', err.message);
       res.status(500).send('Error al obtener los datos de conductores');

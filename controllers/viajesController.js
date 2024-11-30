@@ -2,11 +2,27 @@ const db = require('../config/db');
 
 // Obtener todos los viajes
 const getViajes = (req, res) => {
-  const sql = 'SELECT * FROM Viaje';
-  db.query(sql, (err, results) => {
+  const { fecha_inicio, destino, ID_conductor } = req.query;
+  let sql = 'SELECT * FROM Viaje';
+  const params = [];
+
+  if (fecha_inicio) {
+    sql += ' WHERE fecha_inicio = ?';
+    params.push(fecha_inicio);
+  }
+  if (destino) {
+    sql += fecha_inicio ? ' AND destino LIKE ?' : ' WHERE destino LIKE ?';
+    params.push(`%${destino}%`);
+  }
+  if (ID_conductor) {
+    sql += fecha_inicio || destino ? ' AND ID_conductor = ?' : ' WHERE ID_conductor = ?';
+    params.push(ID_conductor);
+  }
+
+  db.query(sql, params, (err, results) => {
     if (err) {
       console.error('Error al obtener viajes:', err.message);
-      res.status(500).send('Error al obtener los datos');
+      res.status(500).send('Error al obtener los datos de viajes');
     } else {
       res.status(200).json(results);
     }

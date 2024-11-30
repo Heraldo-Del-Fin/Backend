@@ -8,4 +8,5 @@ router.get('/', getViajes);
 // Ruta para crear un nuevo viaje
 router.post('/', createViaje);
 
+
 module.exports = router;
